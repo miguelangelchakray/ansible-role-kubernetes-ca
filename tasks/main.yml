@@ -153,6 +153,16 @@
   tags:
     - kubernetes-ca
 
+- name: Create the operator user key CSR file
+  template:
+    src: cert-oper-csr.json.j2
+    dest: "{{k8s_ca_conf_directory}}/cert-oper-csr.json"
+    owner: "{{k8s_ca_certificate_owner}}"
+    group: "{{k8s_ca_certificate_group}}"
+    mode: 0600
+  tags:
+    - kubernetes-ca
+
 - name: Create the kube-proxy key CSR file
   template:
     src: cert-kube-proxy-csr.json.j2
@@ -199,6 +209,14 @@
   args:
     chdir: "{{k8s_ca_conf_directory}}"
     creates: "{{k8s_ca_conf_directory}}/cert-admin-key.pem"
+  tags:
+    - kubernetes-ca
+
+- name: Generate TLS certificate for operator user
+  shell: "cfssl gencert -ca=ca-k8s-apiserver.pem -ca-key=ca-k8s-apiserver-key.pem -config=ca-k8s-apiserver-config.json -profile=kubernetes cert-oper-csr.json | cfssljson -bare cert-oper"
+  args:
+    chdir: "{{k8s_ca_conf_directory}}"
+    creates: "{{k8s_ca_conf_directory}}/cert-oper-key.pem"
   tags:
     - kubernetes-ca
 
