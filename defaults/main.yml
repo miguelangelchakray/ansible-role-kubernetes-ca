@@ -4,7 +4,7 @@
 # plus "/k8s/certs". That means if the user's $HOME directory is e.g.
 # "/home/da_user" then "k8s_ca_conf_directory" will have a value of
 # "/home/da_user/k8s/certs".
-k8s_ca_conf_directory: "{{ '~/k8s/certs' | expanduser }}"
+k8s_ca_conf_directory: "{{ '/etc/k8s-certs' | expanduser }}"
 k8s_ca_certificate_owner: "root"
 k8s_ca_certificate_group: "root"
 
